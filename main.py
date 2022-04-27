@@ -44,8 +44,8 @@ WINDOW_LAPLACIAN = np.array([[0, 1, 0],
 
 #Диагональный лаплас
 WINDOW_LAPLACIAN_DIAGONAL = np.array([[1, 0, 1],
-                                                    [0, -4, 0],
-                                                    [1, 0, 1]]) * (1/2)
+                                      [0, -4, 0],
+                                      [1, 0, 1]]) * (1/2)
 
 #суммарный из верт-гор + диаг лаплас(комбинированный)
 WINDOW_LAPLACIAN_OF_SUM_APPROXIMATIONS = np.array([[1, 1, 1],
@@ -69,10 +69,6 @@ def border_processing(img_as_arrays, border): #применение ко все�
 def gradient_module(matrix_u, matrix_v): #на вход частные производные, выч модуль градиента.
     sum_of_squares = np.square(matrix_u) + np.square(matrix_v)
     return np.sqrt(sum_of_squares)
-
-
-def laplacian_agreement_method(alpha, beta): #Лапласиан с согласованием для поверхностей 2го порядка
-    return (alpha * 2 + beta * 2).astype(int)
 
 
 def window_processing(matrix, window): #готовая фунция. 2мерная свертка
