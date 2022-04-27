@@ -43,11 +43,11 @@ WINDOW_LAPLACIAN = np.array([[0, 1, 0],
                              [0, 1, 0]])
 
 #Диагональный лаплас
-WINDOW_LAPLACIAN_MUTUALLY_PERPENDICULAR = np.array([[1, 0, 1],
+WINDOW_LAPLACIAN_DIAGONAL = np.array([[1, 0, 1],
                                                     [0, -4, 0],
                                                     [1, 0, 1]]) * (1/2)
 
-#суммарный из верт-гор + диаг лаплас
+#суммарный из верт-гор + диаг лаплас(комбинированный)
 WINDOW_LAPLACIAN_OF_SUM_APPROXIMATIONS = np.array([[1, 1, 1],
                                                    [1, -8, 1],
                                                    [1, 1, 1]]) * (1/3)
@@ -105,7 +105,7 @@ def gradient_rendering(src_img, deriv_horiz, grad_matrix, deriv_vert, img_border
     plt.title("Histogram of gradient evaluation")
     plt.xlabel('Brightness values')
     plt.ylabel('Pixels quantity')
-    create_wb_histogram_plot(grad_matrix)
+    create_histogram(grad_matrix)
     return fig
 
 
@@ -127,30 +127,24 @@ def laplacian_rendering(src_img, laplacian, img_border,window_title):
     plt.title("Histogram of laplacian evaluation")
     plt.xlabel('Brightness values')
     plt.ylabel('Pixels quantity')
-    create_wb_histogram_plot(laplacian)
+    create_histogram(laplacian)
 
     return fig
 
 
-def create_wb_histogram_plot(img_as_arrays):
+def create_histogram(img_as_arrays):
     hist, bins = np.histogram(img_as_arrays.flatten(), 256, [0, 256])
     plt.plot(bins[:-1], hist, color='blue', linestyle='-', linewidth=1)
 
 
-def open_image_as_arrays(filepath):
+def open_image_data(filepath):
     return imread(filepath)
 
 
-def save_image(img, directory):
-    imsave(directory, img)
-
-
-def save_current_parameters_to_file(filepath):
-    json.dump(settings, open(filepath, 'w'))
 
 if __name__ == "__main__":
     image_filepath = settings['filepath']
-    img_as_array = open_image_as_arrays(image_filepath)
+    img_as_array = open_image_data(image_filepath)
 
 
 #градиент
@@ -185,9 +179,9 @@ if __name__ == "__main__":
     plt.tight_layout()
 
 #laplacian x
-    img_laplacian_mutually_perpendicular = np.abs(window_processing(img_as_array, WINDOW_LAPLACIAN_MUTUALLY_PERPENDICULAR))
-    laplacian_rendering(img_as_array, img_laplacian_mutually_perpendicular,
-                     border_processing(img_laplacian_mutually_perpendicular, 25),'Лапласиан диагональный')
+    img_laplacian_diagonal = np.abs(window_processing(img_as_array, WINDOW_LAPLACIAN_DIAGONAL))
+    laplacian_rendering(img_as_array, img_laplacian_diagonal,
+                     border_processing(img_laplacian_diagonal, 25),'Лапласиан диагональный')
     plt.tight_layout()
 
 #laplacians sums
